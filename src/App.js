@@ -1,25 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { userContext } from './context';
+import _ from 'lodash';
 import './App.css';
+import Aside from './layouts/Aside';
+import Home from './components/Home';
 
 function App() {
+  const [ user, setUser ] = useState(
+    JSON.parse(localStorage.getItem("user"))
+  );
+
+  const [showAside, setShowAside] = useState(false);
+
+  const persistUser = (_user)=>{
+    setUser(_user);
+    localStorage.setItem("user", JSON.stringify(_user));
+  };
+
+  const value = {
+    user,
+    setUser : persistUser
+  };
+
+
+  const openAside = () =>{
+    setShowAside(!showAside);
+  }
+
+  const closeAside = () =>{
+    setShowAside(false);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <userContext.Provider value={value}>
+      <div className="float" onClick={ () =>{setShowAside (true)}}>
+        <i className="fas fa-bars my-float"></i>
+      </div>
+      {
+        (showAside || _.isEmpty(user)) && <Aside closeAside={closeAside}/>
+      }
+
+      { !_.isEmpty(user) ?
+        <Home showAside={showAside} openAside={openAside}/>:
+        <div className="home empty"></div>
+      }
+
+    </userContext.Provider>
   );
 }
 
