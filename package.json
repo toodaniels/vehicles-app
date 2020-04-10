@@ -1,5 +1,6 @@
 {
   "name": "vehicles-app",
+  "homepage": "https://toodaniels.github.io/vehicles-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
